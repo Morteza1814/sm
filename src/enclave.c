@@ -443,13 +443,20 @@ error:
  * Deallocates EID, clears epm, etc
  * Fails only if the enclave isn't running.
  */
+__attribute__((weak)) int platform_can_destroy_enclave(struct enclave* enclave)
+{
+  (void) enclave;
+  return 1;
+}
+
 unsigned long destroy_enclave(enclave_id eid)
 {
   int destroyable;
 
   spin_lock(&encl_lock);
   destroyable = (ENCLAVE_EXISTS(eid)
-                 && enclaves[eid].state <= STOPPED);
+                 && enclaves[eid].state <= STOPPED
+                 && platform_can_destroy_enclave(&enclaves[eid]));
   /* update the enclave state first so that
    * no SM can run the enclave any longer */
   if(destroyable)

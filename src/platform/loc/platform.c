@@ -46,6 +46,12 @@ void platform_destroy_enclave(struct enclave *enclave)
   }
 }
 
+int platform_can_destroy_enclave(struct enclave *enclave)
+{
+  const uintptr_t principal = enclave->ped.loc_principal;
+  return !principal || loc_call(6, enclave->eid, principal, 0) == principal;
+}
+
 void platform_switch_to_enclave(struct enclave *enclave)
 {
   const uintptr_t principal = enclave->ped.loc_principal;

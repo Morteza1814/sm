@@ -21,6 +21,10 @@ unsigned long platform_create_enclave(struct enclave* enclave);
 /* This fires once each time an enclave is destroyed by the sm */
 void platform_destroy_enclave(struct enclave* enclave);
 
+/* Called under the enclave lock before changing its state for destruction.
+ * A busy device lease must leave the enclave stopped and its EPM protected. */
+int platform_can_destroy_enclave(struct enclave* enclave);
+
 /* This fires when context switching INTO an enclave from the OS */
 void platform_switch_to_enclave(struct enclave* enclave);
 
