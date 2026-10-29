@@ -1,8 +1,12 @@
+ifeq ($(KEYSTONE_LOC),1)
+  platform-genflags-y += "-DTARGET_PLATFORM_HEADER=\"platform/loc/platform.h\""
+else
 ifdef PLATFORM
   platform-genflags-y += "-DTARGET_PLATFORM_HEADER=\"platform/$(PLATFORM)/platform.h\""
 else
 	PLATFORM = "generic"
   platform-genflags-y += "-DTARGET_PLATFORM_HEADER=\"platform/generic/platform.h\""
+endif
 endif
 
 platform-objs-y += ../../src/attest.o
@@ -29,7 +33,11 @@ platform-objs-y += ../../src/ed25519/sign.o
 platform-objs-y += ../../src/hkdf_sha3_512/hkdf_sha3_512.o
 platform-objs-y += ../../src/hmac_sha3/hmac_sha3.o
 
+ifeq ($(KEYSTONE_LOC),1)
+platform-objs-y += ../../src/platform/loc/platform.o
+else
 platform-objs-y += ../../src/platform/$(PLATFORM)/platform.o
+endif
 
 platform-objs-y += ../../src/plugins/plugins.o
 
